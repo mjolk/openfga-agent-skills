@@ -27,7 +27,6 @@ title: When to Use Each Role Pattern
 **Example:** End-users can create a billing admin or HR admin role
 
 **Choose Role Assignments when:**
-- You need to let end-users define their own roles at the organization level
 - Different users need the same role on different resources
 - Per-project or per-team role membership varies
 - Fine-grained resource-level control is required

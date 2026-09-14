@@ -24,10 +24,13 @@ type document
 
 All users can view the public-readme document.
 
+The application still decides how a request maps to a `user` identity. A wildcard
+does not authenticate an anonymous request.
+
 **Correct usage scenarios:**
 - Public documentation
 - Shared resources everyone should access
-- Anonymous/guest access patterns
+- Access for every identity of a given type
 
 **Incorrect usage (avoid):**
 

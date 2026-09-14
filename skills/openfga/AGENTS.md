@@ -2,7 +2,7 @@
 
 **Version 1.0.0**
 OpenFGA Community
-April 2026
+September 2026
 
 > **Note:**
 > This document is mainly for agents and LLMs to follow when authoring,
@@ -216,7 +216,8 @@ This separation enables efficient permission evaluation and decouples core logic
 
 ### 1.5 Schema Version
 
-Always use schema version 1.1 to access all OpenFGA features.
+Use schema version 1.1 for single-file authorization models. Modular models use
+schema version 1.2 in their `fga.mod` manifest.
 
 **Incorrect (missing schema version):**
 
@@ -243,7 +244,9 @@ type document
     define owner: [user]
 ```
 
-Schema 1.1 enables conditions, intersection, exclusion, and other advanced features.
+Schema 1.1 enables conditions, intersection, exclusion, and other advanced features
+in a single-file model. See [Modular Models](https://openfga.dev/docs/modeling/modular-models)
+for the 1.2 manifest format.
 
 ---
 ## 2. Relations
@@ -647,10 +650,13 @@ type document
 
 All users can view the public-readme document.
 
+The application still decides how a request maps to a `user` identity. A wildcard
+does not authenticate an anonymous request.
+
 **Correct usage scenarios:**
 - Public documentation
 - Shared resources everyone should access
-- Anonymous/guest access patterns
+- Access for every identity of a given type
 
 **Incorrect usage (avoid):**
 
@@ -992,8 +998,14 @@ This applies to any permission, not just `can_edit`. Common examples include `ca
 **More verbose than necessary:**
 
 ```dsl.openfga
+type organization
+  relations
+    define admin: [user]
+    define campaign_manager: [user]
+
 type campaign
   relations
+    define organization: [organization]
     define owner: [user]
     define org_campaign_manager: campaign_manager from organization
     define org_admin: admin from organization
@@ -1014,8 +1026,14 @@ type ad_group
   **More succinct (`can_edit` example):**
 
 ```dsl.openfga
+type organization
+  relations
+    define admin: [user]
+    define campaign_manager: [user]
+
 type campaign
   relations
+    define organization: [organization]
     define owner: [user]
     define org_campaign_manager: campaign_manager from organization
     define org_admin: admin from organization
@@ -1523,17 +1541,14 @@ tuples:
   - user: user:anne
     relation: admin
     object: organization:openfga
-  - user: user:anne
-    relation: admin
-    object: project:openfga
 tests:
-  - name: Members can view projects
+  - name: Admins can create wiki spaces
     check:
       - user: user:anne
         object: organization:openfga
         assertions:
           admin: true
-          member: true
+          member: false
           can_create_space: true
 ```
 
@@ -1575,8 +1590,8 @@ type project
   object: organization:acme
 
 - user: user:bob
-  relation: admin
-  object: project:website
+  relation: member
+  object: organization:acme
 ```
 
 **Use when:**
@@ -1757,7 +1772,6 @@ type project
 **Example:** End-users can create a billing admin or HR admin role
 
 **Choose Role Assignments when:**
-- You need to let end-users define their own roles at the organization level
 - Different users need the same role on different resources
 - Per-project or per-team role membership varies
 - Fine-grained resource-level control is required
@@ -2394,10 +2408,10 @@ fga model test --tests store.fga.yaml
 
 ```bash
 # DSL to JSON
-fga model transform --input model.fga --output model.json
+fga model transform --file model.fga --output-format json > model.json
 
 # JSON to DSL
-fga model transform --input model.json --output model.fga
+fga model transform --file model.json --output-format fga > model.fga
 ```
 
 **Example test run:**
