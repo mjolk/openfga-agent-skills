@@ -40,10 +40,10 @@ fga model test --tests store.fga.yaml
 
 ```bash
 # DSL to JSON
-fga model transform --input model.fga --output model.json
+fga model transform --file model.fga --output-format json > model.json
 
 # JSON to DSL
-fga model transform --input model.json --output model.fga
+fga model transform --file model.json --output-format fga > model.fga
 ```
 
 **Example test run:**

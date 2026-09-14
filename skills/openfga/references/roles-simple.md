@@ -35,8 +35,8 @@ type project
   object: organization:acme
 
 - user: user:bob
-  relation: admin
-  object: project:website
+  relation: member
+  object: organization:acme
 ```
 
 **Use when:**

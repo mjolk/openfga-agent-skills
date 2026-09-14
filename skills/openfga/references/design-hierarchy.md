@@ -158,8 +158,14 @@ This applies to any permission, not just `can_edit`. Common examples include `ca
 **More verbose than necessary:**
 
 ```dsl.openfga
+type organization
+  relations
+    define admin: [user]
+    define campaign_manager: [user]
+
 type campaign
   relations
+    define organization: [organization]
     define owner: [user]
     define org_campaign_manager: campaign_manager from organization
     define org_admin: admin from organization
@@ -180,8 +186,14 @@ type ad_group
   **More succinct (`can_edit` example):**
 
 ```dsl.openfga
+type organization
+  relations
+    define admin: [user]
+    define campaign_manager: [user]
+
 type campaign
   relations
+    define organization: [organization]
     define owner: [user]
     define org_campaign_manager: campaign_manager from organization
     define org_admin: admin from organization

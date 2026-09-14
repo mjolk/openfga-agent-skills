@@ -78,17 +78,14 @@ tuples:
   - user: user:anne
     relation: admin
     object: organization:openfga
-  - user: user:anne
-    relation: admin
-    object: project:openfga
 tests:
-  - name: Members can view projects
+  - name: Admins can create wiki spaces
     check:
       - user: user:anne
         object: organization:openfga
         assertions:
           admin: true
-          member: true
+          member: false
           can_create_space: true
 ```
 

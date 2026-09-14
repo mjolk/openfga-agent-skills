@@ -27,7 +27,7 @@ const SECTION_INTROS = {
  * `references/<name>.md` file paths and descriptions.
  */
 function parseSkillFile() {
-  const content = fs.readFileSync(SKILL_FILE, 'utf8');
+  const content = fs.readFileSync(SKILL_FILE, 'utf8').replace(/\r\n?/g, '\n');
 
   const sections = {};
   const ruleOrder = {};
@@ -125,7 +125,7 @@ function readRules() {
 
   for (const file of files) {
     const filePath = path.join(RULES_DIR, file);
-    const content = fs.readFileSync(filePath, 'utf8');
+    const content = fs.readFileSync(filePath, 'utf8').replace(/\r\n?/g, '\n');
     const { metadata, content: body } = parseFrontmatter(content);
 
     const sectionPrefix = getSectionPrefix(file);
