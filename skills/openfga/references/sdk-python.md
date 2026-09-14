@@ -108,7 +108,7 @@ The Python SDK does not include a built-in DSL parser. Convert DSL files to JSON
 
 ```bash
 # Convert DSL to JSON using the FGA CLI
-fga model transform --input model.fga --output model.json
+fga model transform --file model.fga --output-format json > model.json
 ```
 
 Then load the JSON file as shown above.
